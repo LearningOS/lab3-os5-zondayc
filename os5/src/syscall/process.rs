@@ -7,7 +7,8 @@ use crate::task::{
     add_task, current_task, current_user_token, exit_current_and_run_next, get_current_tcb_info,
     suspend_current_and_run_next, TaskStatus,
 };
-use crate::timer::{get_time_us,get_time_ms};
+
+use crate::timer::{get_time_ms, get_time_us};
 use alloc::sync::Arc;
 use crate::config::MAX_SYSCALL_NUM;
 use crate::syscall::{SYSCALL_EXIT, SYSCALL_GET_TIME, SYSCALL_WRITE, SYSCALL_TASK_INFO, SYSCALL_YIELD};

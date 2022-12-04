@@ -42,6 +42,7 @@ pub fn suspend_current_and_run_next() {
     let task_cx_ptr = &mut task_inner.task_cx as *mut TaskContext;
     // Change status to Ready
     task_inner.task_status = TaskStatus::Ready;
+    task_inner.task_info.task_status=TaskStatus::Ready;
     drop(task_inner);
     // ---- release current PCB
 
@@ -100,14 +101,13 @@ pub fn add_initproc() {
 }
 
 pub fn get_current_tcb_info()->CurTaskInfo{
-    let current_task=take_current_task().unwrap();
+    let current_task=current_task().unwrap();
     let inner=current_task.inner_exclusive_access();
-    let ret=inner.task_info.clone();
-    ret
+    inner.task_info.clone()
 }
 
 pub fn update_task_info(syscall_id:usize){
-    let current_task=take_current_task().unwrap();
+    let current_task=current_task().unwrap();
     let mut inner=current_task.inner_exclusive_access();
     match syscall_id {
         SYSCALL_EXIT=>inner.task_info.sys_exit+=1,
@@ -117,5 +117,4 @@ pub fn update_task_info(syscall_id:usize){
         SYSCALL_YIELD=>inner.task_info.sys_yield+=1,
         _=>(),
     }
-    drop(inner);
 }
