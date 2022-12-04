@@ -118,3 +118,12 @@ pub fn update_task_info(syscall_id:usize){
         _=>(),
     }
 }
+
+pub fn current_task_mmap(_start: usize, _len: usize, _port: usize) -> isize {
+    let current_task=current_task().unwrap();
+    current_task.task_mmap(_start, _len, _port)
+}
+pub fn current_task_munmap(_start: usize, _len: usize) -> isize {
+    let current_task=current_task().unwrap();
+    current_task.task_munmap(_start, _len)
+}

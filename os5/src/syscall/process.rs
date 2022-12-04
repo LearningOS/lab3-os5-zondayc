@@ -5,7 +5,7 @@ use crate::mm::{translated_refmut, translated_str};
 use crate::mm::{translated_pointer};
 use crate::task::{
     add_task, current_task, current_user_token, exit_current_and_run_next, get_current_tcb_info,
-    suspend_current_and_run_next, TaskStatus,
+    suspend_current_and_run_next, TaskStatus, current_task_mmap, current_task_munmap,
 };
 
 use crate::timer::{get_time_ms, get_time_us};
@@ -146,11 +146,11 @@ pub fn sys_set_priority(_prio: isize) -> isize {
 
 // YOUR JOB: 扩展内核以实现 sys_mmap 和 sys_munmap
 pub fn sys_mmap(_start: usize, _len: usize, _port: usize) -> isize {
-    -1
+    current_task_mmap(_start, _len, _port)
 }
 
 pub fn sys_munmap(_start: usize, _len: usize) -> isize {
-    -1
+    current_task_munmap(_start, _len)
 }
 
 //
