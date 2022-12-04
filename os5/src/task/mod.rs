@@ -22,7 +22,7 @@ use alloc::sync::Arc;
 use lazy_static::*;
 use manager::fetch_task;
 use switch::__switch;
-pub use task::{TaskControlBlock, TaskStatus, CurTaskInfo};
+pub use task::{TaskControlBlock, TaskStatus, CurTaskInfo,BIG_STRIDE};
 
 pub use context::TaskContext;
 pub use manager::add_task;

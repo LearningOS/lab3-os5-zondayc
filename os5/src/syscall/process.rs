@@ -5,7 +5,7 @@ use crate::mm::{translated_refmut, translated_str};
 use crate::mm::{translated_pointer};
 use crate::task::{
     add_task, current_task, current_user_token, exit_current_and_run_next, get_current_tcb_info,
-    suspend_current_and_run_next, TaskStatus, current_task_mmap, current_task_munmap,
+    suspend_current_and_run_next, TaskStatus, current_task_mmap, current_task_munmap,BIG_STRIDE
 };
 
 use crate::timer::{get_time_ms, get_time_us};
@@ -141,7 +141,16 @@ pub fn sys_task_info(_ti: *mut TaskInfo) -> isize {
 
 // YOUR JOB: 实现sys_set_priority，为任务添加优先级
 pub fn sys_set_priority(_prio: isize) -> isize {
-    -1
+    if _prio>=2{
+        let current_task=current_task().unwrap();
+        let mut inner=current_task.inner_exclusive_access();
+        inner.priority=_prio as u32;
+        inner.stride=BIG_STRIDE/(_prio as u32);
+        drop(inner);
+        _prio
+    }else{
+        -1
+    }
 }
 
 // YOUR JOB: 扩展内核以实现 sys_mmap 和 sys_munmap

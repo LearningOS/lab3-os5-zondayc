@@ -14,6 +14,9 @@ use core::cell::RefMut;
 /// Task control block structure
 ///
 /// Directly save the contents that will not change during running
+
+pub const BIG_STRIDE:u32=u32::MAX;
+
 #[derive(Copy,Clone)]
 pub struct CurTaskInfo{
     pub sys_write:  u32,
@@ -60,6 +63,12 @@ pub struct TaskControlBlockInner {
     pub exit_code: i32,
 
     pub task_info: CurTaskInfo,
+
+    pub priority: u32,
+
+    pub pass: u32,
+
+    pub stride: u32,
 }
 
 /// Simple access to its internal fields
@@ -118,6 +127,9 @@ impl TaskControlBlock {
                     children: Vec::new(),
                     exit_code: 0,
                     task_info:CurTaskInfo::zero_init(),
+                    priority:16,
+                    pass:0,
+                    stride:BIG_STRIDE/16,
                 })
             },
         };
@@ -187,6 +199,9 @@ impl TaskControlBlock {
                     children: Vec::new(),
                     exit_code: 0,
                     task_info:CurTaskInfo::zero_init(),//?这里可能需要修改
+                    priority:16,
+                    pass:0,
+                    stride:BIG_STRIDE/16,
                 })
             },
         });
