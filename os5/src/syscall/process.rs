@@ -157,5 +157,18 @@ pub fn sys_munmap(_start: usize, _len: usize) -> isize {
 // YOUR JOB: 实现 sys_spawn 系统调用
 // ALERT: 注意在实现 SPAWN 时不需要复制父进程地址空间，SPAWN != FORK + EXEC 
 pub fn sys_spawn(_path: *const u8) -> isize {
-    -1
+    let token = current_user_token();
+    let path = translated_str(token, _path);
+    if let Some(data) = get_app_data_by_name(path.as_str()) {
+        let task = current_task().unwrap();
+        let spawned_task=task.spwan(data);
+        let spawned_pid=spawned_task.pid.0;
+        //?这里应该不用像fork那样设置spawned_task的返回值了？，即下面两行
+        //let trap_cx = spawned_task.inner_exclusive_access().get_trap_cx();
+        //trap_cx.x[10] = 0;
+        add_task(spawned_task);
+        spawned_pid as isize
+    } else {
+        -1
+    }
 }

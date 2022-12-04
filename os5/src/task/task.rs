@@ -201,6 +201,16 @@ impl TaskControlBlock {
         // ---- release parent PCB automatically
         // **** release children PCB automatically
     }
+    pub fn spwan(self:&Arc<TaskControlBlock>, _elf_data: &[u8])-> Arc<TaskControlBlock>{
+        let task_control_block=Arc::new(TaskControlBlock::new(_elf_data));
+        let mut inner=task_control_block.inner_exclusive_access();
+        inner.parent=Some(Arc::downgrade(self));
+        drop(inner);
+        let mut parent_inner=self.inner_exclusive_access();
+        parent_inner.children.push(task_control_block.clone());
+        drop(parent_inner);
+        task_control_block
+    }
     pub fn getpid(&self) -> usize {
         self.pid.0
     }
