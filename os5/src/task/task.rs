@@ -66,7 +66,7 @@ pub struct TaskControlBlockInner {
 
     pub priority: u32,
 
-    pub pass: u32,
+    pub pass: u128,
 
     pub stride: u32,
 }
